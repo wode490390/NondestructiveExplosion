@@ -4,7 +4,7 @@
 Nondestructive explosion plugin for Nukkit.
 
 Please see [mcbbs](https://www.mcbbs.net/thread-825524-1-1.html) for more information.
-## API
+## APIs
 | Packages | Classes |
 | :- | :- |
 | cn.wode490390.nukkit.nde | EntityNondestructiveExplodeEvent |
