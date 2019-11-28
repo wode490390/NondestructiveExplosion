@@ -12,7 +12,11 @@ public class NondestructiveExplosion extends PluginBase implements Listener {
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(this, this);
-        new MetricsLite(this);
+        try {
+            new MetricsLite(this);
+        } catch (Throwable ignore) {
+
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
