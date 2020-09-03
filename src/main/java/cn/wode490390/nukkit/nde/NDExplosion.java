@@ -3,6 +3,8 @@ package cn.wode490390.nukkit.nde;
 import cn.nukkit.block.Block;
 import cn.nukkit.block.BlockTNT;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityItem;
+import cn.nukkit.entity.item.EntityXPOrb;
 import cn.nukkit.event.entity.EntityDamageByBlockEvent;
 import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.entity.EntityDamageEvent;
@@ -16,6 +18,7 @@ import cn.nukkit.math.SimpleAxisAlignedBB;
 import cn.nukkit.math.Vector3;
 import cn.nukkit.network.protocol.LevelSoundEventPacket;
 import com.google.common.collect.Lists;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -52,6 +55,7 @@ public class NDExplosion extends Explosion {
         Vector3 vector = new Vector3();
         Vector3 vBlock = new Vector3();
 
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         int mRays = rays - 1;
         for (int i = 0; i < rays; ++i) {
             for (int j = 0; j < rays; ++j) {
@@ -64,7 +68,7 @@ public class NDExplosion extends Explosion {
                         double pointerY = this.source.y;
                         double pointerZ = this.source.z;
 
-                        for (double blastForce = this.size * ThreadLocalRandom.current().nextInt(700, 1301) / 1000; blastForce > 0; blastForce -= stepLen * 0.75) {
+                        for (double blastForce = this.size * random.nextInt(700, 1301) / 1000; blastForce > 0; blastForce -= stepLen * 0.75) {
                             int x = (int) pointerX;
                             int y = (int) pointerY;
                             int z = (int) pointerZ;
@@ -78,7 +82,7 @@ public class NDExplosion extends Explosion {
 
                             Block block = this.level.getBlock(vBlock);
 
-                            if (block.getId() != 0) {
+                            if (block.getId() != Block.AIR) {
                                 blastForce -= (block.getResistance() / 5 + 0.3) * stepLen;
                                 if (blastForce > 0) {
                                     if (!this.affectedBlocks.contains(block)) {
@@ -140,14 +144,20 @@ public class NDExplosion extends Explosion {
                 } else {
                     ev = new EntityDamageEvent(entity, DamageCause.BLOCK_EXPLOSION, damage);
                 }
-
                 entity.attack(ev);
-                entity.setMotion(motion.multiply(impact));
+
+                if (!(entity instanceof EntityItem || entity instanceof EntityXPOrb)) {
+                    entity.setMotion(motion.multiply(impact));
+                }
             }
         }
 
-        this.affectedBlocks.parallelStream().filter(block -> block instanceof BlockTNT)
-                .forEach(block -> ((BlockTNT) block).prime(ThreadLocalRandom.current().nextInt(10, 31), this.what instanceof Entity ? (Entity) this.what : null));
+        if (!this.affectedBlocks.isEmpty()) {
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+            this.affectedBlocks.stream()
+                    .filter(block -> block instanceof BlockTNT)
+                    .forEach(block -> ((BlockTNT) block).prime(random.nextInt(10, 31), this.what instanceof Entity ? (Entity) this.what : null));
+        }
 
         this.level.addParticle(new HugeExplodeSeedParticle(this.source));
         this.level.addLevelSoundEvent(this.source.floor(), LevelSoundEventPacket.SOUND_EXPLODE);

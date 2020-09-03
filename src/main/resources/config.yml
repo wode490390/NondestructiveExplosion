@@ -1,0 +1,2 @@
+# Whether to activate nearby TNT blocks during an explosion
+activate-nearby-tnt: false

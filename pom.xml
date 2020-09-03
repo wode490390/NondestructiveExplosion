@@ -7,7 +7,7 @@
     <groupId>cn.wode490390.nukkit</groupId>
     <artifactId>nondestructiveexplosion</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <name>NondestructiveExplosion</name>
     <description>Nondestructive explosion plugin for Nukkit</description>
     <url>http://wode490390.cn/</url>
@@ -54,7 +54,7 @@
     <repositories>
         <repository>
             <id>nukkitx-repo</id>
-            <url>http://repo.nukkitx.com/main/</url>
+            <url>https://repo.nukkitx.com/main/</url>
         </repository>
     </repositories>
 
@@ -84,7 +84,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>4.0.0</version>
+                <version>4.0.2</version>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>
